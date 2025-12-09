@@ -93,14 +93,18 @@ const ChatInterface: React.FC<ChatInterfaceProps> = () => {
 
   const triggerConfetti = async () => {
     try {
-      const canvasConfetti = await import('canvas-confetti').then(m => m.default);
-      canvasConfetti({
-        particleCount: 140,
-        spread: 75,
-        origin: { y: 0.6 },
-        colors: ['#8B5CF6', '#EC4899', '#06B6D4', '#10B981'],
-        scalar: 1.1,
-      });
+      // @vite-ignore - dynamic import that may not exist in build
+      const confettiModule = await import(/* @vite-ignore */ 'canvas-confetti');
+      const canvasConfetti = confettiModule.default || confettiModule;
+      if (typeof canvasConfetti === 'function') {
+        canvasConfetti({
+          particleCount: 140,
+          spread: 75,
+          origin: { y: 0.6 },
+          colors: ['#8B5CF6', '#EC4899', '#06B6D4', '#10B981'],
+          scalar: 1.1,
+        });
+      }
     } catch (e) {
       // Silently fail if canvas-confetti is not available
       console.warn('canvas-confetti not available');
