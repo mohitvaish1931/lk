@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, Zap, Menu, X } from 'lucide-react';
-import confetti from 'canvas-confetti';
 import { Message, UserProgress } from '../types';
 import MessageBubble from './MessageBubble';
 import ChatInput from './ChatInput';
@@ -92,14 +91,20 @@ const ChatInterface: React.FC<ChatInterfaceProps> = () => {
     // Users can manually scroll if needed
   }, [messages, isTyping]);
 
-  const triggerConfetti = () => {
-    confetti({
-      particleCount: 140,
-      spread: 75,
-      origin: { y: 0.6 },
-      colors: ['#8B5CF6', '#EC4899', '#06B6D4', '#10B981'],
-      scalar: 1.1,
-    });
+  const triggerConfetti = async () => {
+    try {
+      const canvasConfetti = await import('canvas-confetti').then(m => m.default);
+      canvasConfetti({
+        particleCount: 140,
+        spread: 75,
+        origin: { y: 0.6 },
+        colors: ['#8B5CF6', '#EC4899', '#06B6D4', '#10B981'],
+        scalar: 1.1,
+      });
+    } catch (e) {
+      // Silently fail if canvas-confetti is not available
+      console.warn('canvas-confetti not available');
+    }
   };
 
   const callApi = async (message: string): Promise<string> => {

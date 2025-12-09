@@ -7,14 +7,4 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
-  build: {
-    rollupOptions: {
-      external: ['canvas-confetti'],
-      output: {
-        globals: {
-          'canvas-confetti': 'confetti',
-        },
-      },
-    },
-  },
 });
